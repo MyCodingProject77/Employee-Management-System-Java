@@ -1,0 +1,193 @@
+
+
+
+            Create connection and save data
+
+
+              public void Connect()  {
+    
+    
+          
+          
+          try {
+          Class.forName("com.mysql.jdbc.Driver"); 
+          con = DriverManager.getConnection("jdbc:mysql://localhost/employeedb","root","");   
+          
+          
+        
+          } catch (ClassNotFoundException ex) {
+              
+              Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null ,ex);
+             
+              
+        } catch (SQLException ex) {
+              
+              Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null ,ex);
+              
+        
+          }
+          
+    }
+
+
+  Now double click on the insert button and type code
+
+
+   try {
+            
+        String EmpId = txtId.getText();
+        String EmployeeName = txtName.getText();
+        String Email = txtEmail.getText();
+        String Address = txtAddress.getText();
+        String Salary = txtSalary.getText();
+        
+        
+        PreparedStatement pst = con.prepareStatement("INSERT INTO emptab (empid,employeename,email,address,salary)VALUES(?,?,?,?,?)"); 
+            
+            pst.setString(1,EmpId);
+            pst.setString(2, EmployeeName);
+            pst.setString(3,Email);
+            pst.setString(4,Address);
+            pst.setString(5,Salary);
+            
+            
+            
+            int a = pst.executeUpdate();
+            
+            
+            if (a==1){
+            
+             JOptionPane.showMessageDialog("Record Added Successfully");
+              
+             
+        
+            
+            
+        }else{
+                
+                 JOptionPane.showMessageDialog(Error,"Please Try Again");
+
+                 ShowTableData();
+                
+                }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+}
+
+
+
+
+  
+
+        private void ShowTableData(){
+    
+    
+        try {
+            int q;
+            
+            PreparedStatement pst = con.prepareStatement("select * from emptab"); 
+            rs = pst.executeQuery();
+            
+            ResultSetMetaData rss = rs.getMetaData();
+            
+            q = rss.getColumnCount();
+            
+            DefaultTableModel df =(DefaultTableModel)table1.getModel(); 
+            
+            df.setRowCount(0);
+             
+            while(rs.next()){
+        
+            Vector v2 = new Vector();
+             
+            for(int a=1; a<q; a++){
+                 
+                v2.add(rs.getString("EmpId"));
+                v2.add(rs.getString("EmployeeName"));
+                v2.add(rs.getString("Email"));
+                v2.add(rs.getString("Address"));
+                v2.add(rs.getString("Salary"));
+             }
+             
+             df.addRow(v2);
+        
+        }
+            
+    
+        
+        } catch (SQLException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+
+
+       Delete Code
+
+
+
+       try{
+     
+   String value1=txtId.getText();
+   String value2=txtName.getText();
+   String value3=txtEmail.getText();
+   String value4=txtAddress.getText();
+   String value5=txtSalary.getText();
+   
+   
+
+
+   String sql="DELETE FROM emptab where employeeid='"+value1+"'";
+
+   pst=con.prepareStatement(sql);
+
+   int deleteCount = pst.executeUpdate();
+   JOptionPane.showMessageDialog(null,"Record Deleted Successfully");  
+ }
+
+  catch(SQLException e){
+    JOptionPane.showMessageDialog(null,e);
+}
+           
+   
+    }       
+
+
+
+
+
+
+       Update Code
+
+       
+        try{
+     
+
+     String value1=txtId.getText();
+   String value2=txtName.getText();
+   String value3=txtEmail.getText();
+   String value4=txtAddress.getText();
+   String value5=txtSalary.getText();
+   
+   
+
+
+   String sql="Update emptab set employeeid='"+value1+"', employeename='"+value2+"', email='"+value3+"', address='"+value4"', salary='"+value5"' where employeeid='"+value1+"'";
+
+   pst=con.prepareStatement(sql);
+
+   int updateCount = pst.executeUpdate();
+   JOptionPane.showMessageDialog(null,"Record Updated Successfully");  
+ }
+
+  catch(SQLException e){
+    JOptionPane.showMessageDialog(null,e);
+}
+
+                                          
+
+    }                                                             
+    
